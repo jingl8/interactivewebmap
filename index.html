@@ -68,11 +68,7 @@ var someFeatures = [{
     }
 }];
 	  
-L.geoJSON(someFeatures, {
-    filter: function(feature, layer) {
-        return feature.properties.show_on_map;
-    }
-}).addTo(map);
+L.geoJSON(someFeatures).addTo(map);
 
   </script>
 </body>
