@@ -15,7 +15,7 @@
 <body>
 
   <div id="map"> </div>
-	
+  <script src="PointLayer-geojson.js" type="text/javascript"></script>
   <script>
 
   // initialize the map
@@ -68,10 +68,7 @@ var someFeatures = [{
     }
 }];
 	  
- fetch("countries.geojson").then(res => res.json()).then(data => {
-    // add GeoJSON layer to the map once the file is loaded
-    L.geoJson(data).addTo(map);
-  });
+ L.geoJSON(PoinstLayer).addTo(map);
 
   </script>
 </body>
