@@ -16,8 +16,6 @@
 
   <div id="map"> </div>
 	
-  <script src="PointLayer-geojson.js" type="text/javascript"></script>
-	
   <script>
 
   // initialize the map
@@ -28,6 +26,7 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
 }).addTo(map);
 	  
+var PointsLayer = {"type":"FeatureCollection","features":[{"type":"Feature","properties":{"new":"one"},"geometry":{"coordinates":[-88.21781214715148,40.110634834955675],"type":"Point"},"id":0},{"type":"Feature","properties":{"new":"two"},"geometry":{"coordinates":[-88.2174224231665,40.11646334570281],"type":"Point"},"id":1},{"type":"Feature","properties":{"new":"three"},"geometry":{"coordinates":[-88.23205871451823,40.110317450916796],"type":"Point"}},{"type":"Feature","properties":{"new":"four"},"geometry":{"coordinates":[-88.23216697118053,40.11636123780181],"type":"Point"},"id":3}]}
 L.geoJSON(PointLayer).addTo(map);
 
   </script>
