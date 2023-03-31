@@ -126,7 +126,8 @@
           ]
         ],
         "type": "Polygon"
-      }
+      },
+      "id": 8
     },
     {
       "type": "Feature",
@@ -151,7 +152,8 @@
           ]
         ],
         "type": "LineString"
-      }
+      },
+      "id": 9
     }
   ]
 }
