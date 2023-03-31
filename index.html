@@ -34,7 +34,7 @@ var someFeatures = [{
     },
     "geometry": {
         "type": "Point",
-        "coordinates": [-88.41, 40.11]
+        "coordinates": [-88.21781214715148,40.110634834955675]
     }
 }, {
     "type": "Feature",
@@ -44,9 +44,30 @@ var someFeatures = [{
     },
     "geometry": {
         "type": "Point",
-        "coordinates": [-88.42, 40.12]
+        "coordinates": [-88.23216697118053,40.11636123780181]
     }
-}];
+},{
+    "type": "Feature",
+    "properties": {
+        "name": "Coors Field",
+        "show_on_map": true
+    },
+    "geometry": {
+        "type": "Point",
+        "coordinates": [-88.23205871451823,40.110317450916796]
+    }
+}, {
+    "type": "Feature",
+    "properties": {
+        "name": "Busch Field",
+        "show_on_map": false
+    },
+    "geometry": {
+        "type": "Point",
+        "coordinates": [-88.2174224231665,40.11646334570281]
+    }
+}
+];
 
 L.geoJSON(someFeatures, {
     filter: function(feature, layer) {
