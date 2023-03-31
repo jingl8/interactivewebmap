@@ -68,7 +68,10 @@ var someFeatures = [{
     }
 }];
 	  
-L.geoJSON(someFeatures).addTo(map);
+ fetch("countries.geojson").then(res => res.json()).then(data => {
+    // add GeoJSON layer to the map once the file is loaded
+    L.geoJson(data).addTo(map);
+  });
 
   </script>
 </body>
