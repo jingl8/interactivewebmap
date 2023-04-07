@@ -69,8 +69,6 @@ function style(feature) {
         fillOpacity: 0.7
     };
 }
-
-// var geojson;
 	  
 function highlightFeature(e) {
     const layer = e.target;
@@ -84,8 +82,10 @@ function highlightFeature(e) {
     layer.bringToFront();
 }
 	  
+var IllinoisGeoJSON;
+	  
 function resetHighlight(e) {
-    geojson.resetStyle(e.target);
+    IllinoisGeoJSON.resetStyle(e.target);
 }	  	  
 	  
 function onEachFeature(feature, layer) {
