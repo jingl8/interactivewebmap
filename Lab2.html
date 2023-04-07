@@ -1,0 +1,63 @@
+<html>
+<head>
+  <title>My first map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+     integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+     crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+    integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+    crossorigin=""></script>
+  <style>
+    #map{ width: 600px; height: 400px; }
+  </style>
+</head>
+
+<body>
+
+  <div id="map"> </div>
+  
+  function highlightFeature(e) {
+    var layer = e.target;
+
+    layer.setStyle({
+        weight: 5,
+        color: '#656',
+        dashArray: '',
+        fillOpacity: 0.7
+    });
+
+    layer.bringToFront();
+}
+  
+  function resetHighlight(e) {
+    geojson.resetStyle(e.target);
+}
+  
+  function zoomToFeature(e) {
+    map.fitBounds(e.target.getBounds());
+}
+	
+  <script src="PointLayer-geojson.js"></script>
+  <script src="PointLayer-geojson.json"></script>
+  <script>
+
+  // initialize the map
+  var map = L.map('map').setView([40, -88], 10);
+
+  // load a tile layer
+// L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+//	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+//}).addTo(map);
+	  
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+	  	  
+ fetch("countries.geojson").then(res => res.json()).then(data => {
+    // add GeoJSON layer to the map once the file is loaded
+    L.geoJson(data).addTo(map);
+  });
+
+  </script>
+</body>
+</html>
