@@ -70,34 +70,39 @@ function style(feature) {
     };
 }
 
+var geojson;
+	  
 function highlightFeature(e) {
-		const layer = e.target;
+    var layer = e.target;
 
-		layer.setStyle({
-			weight: 5,
-			color: 'white',
-			fillOpacity: 0.9
-		});
+    layer.setStyle({
+        weight: 5,
+        color: '#666',
+        dashArray: '',
+        fillOpacity: 0.7
+    });
 
-		layer.bringToFront();
-
-		//info.update(layer.feature.properties); //we will use this in a bit.
-	}
+    layer.bringToFront();
+}
 	  
 function resetHighlight(e) {
-		geojson.resetStyle(e.target);
-		//info.update();
-	}
+    geojson.resetStyle(e.target);
+}	  
+	  
+function zoomToFeature(e) {
+    map.fitBounds(e.target.getBounds());
+}	  
 	  
 function onEachFeature(feature, layer) {
-layer.on({
-	mouseover: highlightFeature,
-	mouseout: resetHighlight,
-	//click: zoomToFeature
-});
+    layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight,
+        click: zoomToFeature
+    });
+}
 	  
 const IllinoisGeoJSON = L.geoJson(IllioisGJSON, {style: style,
-		onEachFeature}).addTo(map);
+		onEachFeature: onEachFeature}).addTo(map);
 	  
 //Remember - IllioisGJSON is the variable name inside your Lab2.JS file
 	  
