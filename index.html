@@ -82,10 +82,10 @@ function highlightFeature(e) {
     layer.bringToFront();
 }
 	  
-var IllinoisGeoJSON;
+var geojson;
 	  
 function resetHighlight(e) {
-    IllinoisGeoJSON.resetStyle(e.target);
+    geojson.resetStyle(e.target);
 }	  	  
 	  
 function onEachFeature(feature, layer) {
@@ -95,7 +95,7 @@ function onEachFeature(feature, layer) {
     });
 }
 	  
-const IllinoisGeoJSON = L.geoJson(IllioisGJSON, {style: style,
+const geojson = L.geoJson(IllioisGJSON, {style: style,
 		onEachFeature: onEachFeature}).addTo(map);
 	  
 //Remember - IllioisGJSON is the variable name inside your Lab2.JS file
