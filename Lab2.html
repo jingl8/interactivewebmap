@@ -49,17 +49,17 @@ width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.7;
 	  
   //function formats the shape color based on the attribute d's value
 
-function getColor(EdNorm) {
-    return EdNorm > 35.19  ? '#BD0026' :
-           EdNorm > 22.91  ? '#E31A1C' :
-           EdNorm > 12.87  ? '#FC4E2A' :
-           EdNorm > 0  ? '#FD8D3C' :
+function getColor(IL_ED_Lab2_NormBach) {
+    return IL_ED_Lab2_NormBach > 35.19  ? '#BD0026' :
+           IL_ED_Lab2_NormBach > 22.91  ? '#E31A1C' :
+           IL_ED_Lab2_NormBach > 12.87  ? '#FC4E2A' :
+           IL_ED_Lab2_NormBach > 0  ? '#FD8D3C' :
                       '#FFEDA0';
 }
 	  
 function style(feature) {
     return {
-        fillColor: getColor(feature.properties.EdNorm), //color by density attribute
+        fillColor: getColor(feature.properties.IL_ED_Lab2_NormBach), //color by density attribute
         weight: 0.5, //line weight
         opacity: 1, //line opacity
         color: 'black', //line color
