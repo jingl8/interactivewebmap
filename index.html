@@ -70,9 +70,34 @@ function style(feature) {
     };
 }
 
+function highlightFeature(e) {
+		const layer = e.target;
+
+		layer.setStyle({
+			weight: 5,
+			color: 'white',
+			fillOpacity: 0.9
+		});
+
+		layer.bringToFront();
+
+		//info.update(layer.feature.properties); //we will use this in a bit.
+	}
 	  
+function resetHighlight(e) {
+		geojson.resetStyle(e.target);
+		//info.update();
+	}
 	  
-const IllinoisGeoJSON = L.geoJson(IllioisGJSON, {style: style}).addTo(map);
+function onEachFeature(feature, layer) {
+layer.on({
+	mouseover: highlightFeature,
+	mouseout: resetHighlight,
+	//click: zoomToFeature
+});
+	  
+const IllinoisGeoJSON = L.geoJson(IllioisGJSON, {style: style,
+		onEachFeature}).addTo(map);
 	  
 //Remember - IllioisGJSON is the variable name inside your Lab2.JS file
 	  
