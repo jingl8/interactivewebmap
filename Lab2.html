@@ -59,7 +59,7 @@ function getColor(EdNorm) {
 	  
 function style(feature) {
     return {
-        fillColor: getColor(feature.properties.IL_ED_Lab2_NormBach), //color by density attribute
+        fillColor: getColor(feature.properties.EDNorm), //color by density attribute
         weight: 0.5, //line weight
         opacity: 1, //line opacity
         color: 'black', //line color
@@ -71,7 +71,7 @@ const IllinoisGeoJSON = L.geoJson(IllinoisGJSON, {
 			style, //refers to the style function above
 		}).addTo(map);
 
-	  //Remember - IllioisGJSON is the variable name inside your Lab2.JS file
+//Remember - IllioisGJSON is the variable name inside your Lab2.JS file
 
 //locates the legend in the bottom right of the map
 var legend = L.control({position: 'bottomright'});
