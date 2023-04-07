@@ -95,7 +95,7 @@ function onEachFeature(feature, layer) {
     });
 }
 	  
-const geojson = L.geoJson(IllioisGJSON, {style: style,
+geojson = L.geoJson(IllioisGJSON, {style: style,
 		onEachFeature: onEachFeature}).addTo(map);
 	  
 //Remember - IllioisGJSON is the variable name inside your Lab2.JS file
