@@ -47,9 +47,7 @@ function style(feature) {
     };
 }
 	  
-	const IllinoisGeoJSON = L.geoJson(IllinoisGJSON, {
-			style, //refers to the style function above
-		}).addTo(map);
+	const IllinoisGeoJSON = L.geoJson(IllinoisGJSON, {style: style}).addTo(map);
 
   </script>
 </body>
