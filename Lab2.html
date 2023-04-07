@@ -16,27 +16,6 @@
 
   <div id="map"> </div>
   
-  function highlightFeature(e) {
-    var layer = e.target;
-
-    layer.setStyle({
-        weight: 5,
-        color: '#656',
-        dashArray: '',
-        fillOpacity: 0.7
-    });
-
-    layer.bringToFront();
-}
-  
-  function resetHighlight(e) {
-    geojson.resetStyle(e.target);
-}
-  
-  function zoomToFeature(e) {
-    map.fitBounds(e.target.getBounds());
-}
-	
   <script src="PointLayer-geojson.js"></script>
   <script src="PointLayer-geojson.json"></script>
   <script>
