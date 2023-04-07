@@ -18,17 +18,17 @@
   
   <script type="text/javascript" src="Lab2.js"></script>
 	
-  <script type="text/javascript">
+  <script>
 	  
   // initialize the map
   const map = L.map('map').setView([40, -89], 6);
-	  
+
   const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	maxZoom: 19,
-	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
-	  
-const IllinoisGeoJSON = L.geoJson(IllinoisGJSON).addTo(map);
+
+  const IllinoisGeoJSON = L.geoJson(IllinoisGJSON).addTo(map);
 	  
   </script>
 </body>
