@@ -16,26 +16,24 @@
 
   <div id="map"> </div>
   
-  <script src="PointLayer-geojson.js"></script>
-  <script src="PointLayer-geojson.json"></script>
+  <script type="text/javascript" src="Lab2.js"></script>
+	
+  // <script src="PointLayer-geojson.json"></script>
   <script>
 
   // initialize the map
-  var map = L.map('map').setView([40, -88], 10);
-
-  // load a tile layer
-// L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-//	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-//}).addTo(map);
+  var map = L.map('map').setView([40, -89], 6);
 	  
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
-	  	  
- fetch("countries.geojson").then(res => res.json()).then(data => {
-    // add GeoJSON layer to the map once the file is loaded
-    L.geoJson(data).addTo(map);
-  });
+	  
+  const IllinoisGeoJSON = L.geoJson(IllioisGJSON).addTo(map);
+//Remember - IllioisGJSON is the variable name inside your Lab2.JS file
+	  
+ //fetch("countries.geojson").then(res => res.json()).then(data => {
+ //   L.geoJson(data).addTo(map);
+ // });
 
   </script>
 </body>
