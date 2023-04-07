@@ -68,7 +68,7 @@ function style(feature) {
 }
 	  
 const IllinoisGeoJSON = L.geoJson(IllinoisGJSON, {
-		style, //refers to the style function above
+		style:style
 	}).addTo(map);
 	  
 //locates the legend in the bottom right of the map
