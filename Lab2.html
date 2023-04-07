@@ -28,9 +28,7 @@
 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 	  
-  const IllinoisGeoJSON = L.geoJson(IllioisGJSON, {
-			style, //refers to the style function above
-		}).addTo(map);
+  const IllinoisGeoJSON = L.geoJson(IllioisGJSON).addTo(map);
 //Remember - IllioisGJSON is the variable name inside your Lab2.JS file
 	  
  //fetch("countries.geojson").then(res => res.json()).then(data => {
