@@ -20,7 +20,7 @@
 	
   // <script src="PointLayer-geojson.json"></script>
   <script>
-
+	  
   // initialize the map
   const map = L.map('map').setView([40, -89], 6);
 	  
@@ -29,7 +29,29 @@
 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 	  
-  const IllinoisGeoJSON = L.geoJson(IllioisGJSON).addTo(map);
+   //function formats the shape color based on the attribute d's value
+
+function getColor(EdNorm) {
+    return EdNorm > 35.19  ? '#BD0026' :
+           EdNorm > 22.91  ? '#E31A1C' :
+           EdNorm > 12.87  ? '#FC4E2A' :
+           EdNorm > 0  ? '#FD8D3C' :
+                      '#FFEDA0';
+}
+
+function style(feature) {
+    return {
+        fillColor: getColor(feature.properties.EdNorm), //color by density attribute
+        weight: 0.5, //line weight
+        opacity: 1, //line opacity
+        color: 'black', //line color
+        fillOpacity: 0.7 //shape file
+    };
+}
+	  
+  const IllinoisGeoJSON = L.geoJson(IllioisGJSON, {
+			style, //refers to the style function above
+		}).addTo(map);
 //Remember - IllioisGJSON is the variable name inside your Lab2.JS file
 	  
  //fetch("countries.geojson").then(res => res.json()).then(data => {
