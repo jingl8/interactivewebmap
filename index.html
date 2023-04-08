@@ -104,9 +104,9 @@ geojson = L.geoJson(IllioisGJSON, {style: style,
 	  
 var pointLayer = L.geoJSON(null, {
   pointToLayer: function(feature,latlng){
-    label = String(feature.properties.name) // Must convert to string, .bindTooltip can't use straight 'feature.properties.attribute'
+    label = String(feature.properties.name)
     return new L.CircleMarker(latlng, {
-      radius: 1,
+      radius: 2,
     }).bindTooltip(label, {permanent: false, opacity: 0.7}).openTooltip();
     }
   });
