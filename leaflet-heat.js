@@ -1,213 +1,246 @@
-'use strict';
+/*
+* Leaflet Heatmap Overlay
+*
+* Copyright (c) 2008-2016, Patrick Wied (https://www.patrick-wied.at)
+* Dual-licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
+* and the Beerware (http://en.wikipedia.org/wiki/Beerware) license.
+*/
+;(function (name, context, factory) {
+  // Supports UMD. AMD, CommonJS/Node.js and browser context
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = factory(
+      require('heatmap.js'),
+      require('leaflet')
+    );
+  } else if (typeof define === "function" && define.amd) {
+    define(['heatmap.js', 'leaflet'], factory);
+  } else {
+    // browser globals
+    if (typeof window.h337 === 'undefined') {
+      throw new Error('heatmap.js must be loaded before the leaflet heatmap plugin');
+    }
+    if (typeof window.L === 'undefined') {
+      throw new Error('Leaflet must be loaded before the leaflet heatmap plugin');
+    }
+    context[name] = factory(window.h337, window.L);
+  }
 
-L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
+})("HeatmapOverlay", this, function (h337, L) {
+  'use strict';
 
-    // options: {
-    //     minOpacity: 0.05,
-    //     maxZoom: 18,
-    //     radius: 25,
-    //     blur: 15,
-    //     max: 1.0
-    // },
+  // Leaflet < 0.8 compatibility
+  if (typeof L.Layer === 'undefined') {
+    L.Layer = L.Class;
+  }
 
-    initialize: function (latlngs, options) {
-        this._latlngs = latlngs;
-        L.setOptions(this, options);
-    },
+  var HeatmapOverlay = L.Layer.extend({
 
-    setLatLngs: function (latlngs) {
-        this._latlngs = latlngs;
-        return this.redraw();
-    },
-
-    addLatLng: function (latlng) {
-        this._latlngs.push(latlng);
-        return this.redraw();
-    },
-
-    setOptions: function (options) {
-        L.setOptions(this, options);
-        if (this._heat) {
-            this._updateOptions();
-        }
-        return this.redraw();
-    },
-
-    redraw: function () {
-        if (this._heat && !this._frame && this._map && !this._map._animating) {
-            this._frame = L.Util.requestAnimFrame(this._redraw, this);
-        }
-        return this;
+    initialize: function (config) {
+      this.cfg = config;
+      this._el = L.DomUtil.create('div', 'leaflet-zoom-hide');
+      this._data = [];
+      this._max = 1;
+      this._min = 0;
+      this.cfg.container = this._el;
     },
 
     onAdd: function (map) {
-        this._map = map;
+      var size = map.getSize();
 
-        if (!this._canvas) {
-            this._initCanvas();
-        }
+      this._map = map;
 
-        if (this.options.pane) {
-            this.getPane().appendChild(this._canvas);
-        }else{
-            map._panes.overlayPane.appendChild(this._canvas);
-        }
+      this._width = size.x;
+      this._height = size.y;
 
-        map.on('moveend', this._reset, this);
+      this._el.style.width = size.x + 'px';
+      this._el.style.height = size.y + 'px';
+      this._el.style.position = 'absolute';
 
-        if (map.options.zoomAnimation && L.Browser.any3d) {
-            map.on('zoomanim', this._animateZoom, this);
-        }
+      this._origin = this._map.layerPointToLatLng(new L.Point(0, 0));
 
-        this._reset();
-    },
+      map.getPanes().overlayPane.appendChild(this._el);
 
-    onRemove: function (map) {
-        if (this.options.pane) {
-            this.getPane().removeChild(this._canvas);
-        }else{
-            map.getPanes().overlayPane.removeChild(this._canvas);
-        }
+      if (!this._heatmap) {
+        this._heatmap = h337.create(this.cfg);
+      } 
 
-        map.off('moveend', this._reset, this);
-
-        if (map.options.zoomAnimation) {
-            map.off('zoomanim', this._animateZoom, this);
-        }
+      // this resets the origin and redraws whenever
+      // the zoom changed or the map has been moved
+      map.on('moveend', this._reset, this);
+      this._draw();
     },
 
     addTo: function (map) {
-        map.addLayer(this);
-        return this;
+      map.addLayer(this);
+      return this;
     },
 
-    _initCanvas: function () {
-        var canvas = this._canvas = L.DomUtil.create('canvas', 'leaflet-heatmap-layer leaflet-layer');
+    onRemove: function (map) {
+      // remove layer's DOM elements and listeners
+      map.getPanes().overlayPane.removeChild(this._el);
 
-        var originProp = L.DomUtil.testProp(['transformOrigin', 'WebkitTransformOrigin', 'msTransformOrigin']);
-        canvas.style[originProp] = '50% 50%';
-
-        var size = this._map.getSize();
-        canvas.width  = size.x;
-        canvas.height = size.y;
-
-        var animated = this._map.options.zoomAnimation && L.Browser.any3d;
-        L.DomUtil.addClass(canvas, 'leaflet-zoom-' + (animated ? 'animated' : 'hide'));
-
-        this._heat = simpleheat(canvas);
-        this._updateOptions();
+      map.off('moveend', this._reset, this);
     },
+    _draw: function() {
+      if (!this._map) { return; }
+      
+      var mapPane = this._map.getPanes().mapPane;
+      var point = mapPane._leaflet_pos;      
 
-    _updateOptions: function () {
-        this._heat.radius(this.options.radius || this._heat.defaultRadius, this.options.blur);
+      // reposition the layer
+      this._el.style[HeatmapOverlay.CSS_TRANSFORM] = 'translate(' +
+        -Math.round(point.x) + 'px,' +
+        -Math.round(point.y) + 'px)';
 
-        if (this.options.gradient) {
-            this._heat.gradient(this.options.gradient);
-        }
-        if (this.options.max) {
-            this._heat.max(this.options.max);
-        }
+      this._update();
     },
+    _update: function() {
+      var bounds, zoom, scale;
+      var generatedData = { max: this._max, min: this._min, data: [] };
 
-    _reset: function () {
-        var topLeft = this._map.containerPointToLayerPoint([0, 0]);
-        L.DomUtil.setPosition(this._canvas, topLeft);
+      bounds = this._map.getBounds();
+      zoom = this._map.getZoom();
+      scale = Math.pow(2, zoom);
 
-        var size = this._map.getSize();
-
-        if (this._heat._width !== size.x) {
-            this._canvas.width = this._heat._width  = size.x;
+      if (this._data.length == 0) {
+        if (this._heatmap) {
+          this._heatmap.setData(generatedData);
         }
-        if (this._heat._height !== size.y) {
-            this._canvas.height = this._heat._height = size.y;
+        return;
+      }
+
+
+      var latLngPoints = [];
+      var radiusMultiplier = this.cfg.scaleRadius ? scale : 1;
+      var localMax = 0;
+      var localMin = 0;
+      var valueField = this.cfg.valueField;
+      var len = this._data.length;
+    
+      while (len--) {
+        var entry = this._data[len];
+        var value = entry[valueField];
+        var latlng = entry.latlng;
+
+
+        // we don't wanna render points that are not even on the map ;-)
+        if (!bounds.contains(latlng)) {
+          continue;
         }
+        // local max is the maximum within current bounds
+        localMax = Math.max(value, localMax);
+        localMin = Math.min(value, localMin);
 
-        this._redraw();
-    },
+        var point = this._map.latLngToContainerPoint(latlng);
+        var latlngPoint = { x: Math.round(point.x), y: Math.round(point.y) };
+        latlngPoint[valueField] = value;
 
-    _redraw: function () {
-        if (!this._map) {
-            return;
-        }
-        var data = [],
-            r = this._heat._r,
-            size = this._map.getSize(),
-            bounds = new L.Bounds(
-                L.point([-r, -r]),
-                size.add([r, r])),
+        var radius;
 
-            max = this.options.max === undefined ? 1 : this.options.max,
-            maxZoom = this.options.maxZoom === undefined ? this._map.getMaxZoom() : this.options.maxZoom,
-            v = 1 / Math.pow(2, Math.max(0, Math.min(maxZoom - this._map.getZoom(), 12))),
-            cellSize = r / 2,
-            grid = [],
-            panePos = this._map._getMapPanePos(),
-            offsetX = panePos.x % cellSize,
-            offsetY = panePos.y % cellSize,
-            i, len, p, cell, x, y, j, len2, k;
-
-        // console.time('process');
-        for (i = 0, len = this._latlngs.length; i < len; i++) {
-            p = this._map.latLngToContainerPoint(this._latlngs[i]);
-            if (bounds.contains(p)) {
-                x = Math.floor((p.x - offsetX) / cellSize) + 2;
-                y = Math.floor((p.y - offsetY) / cellSize) + 2;
-
-                var alt =
-                    this._latlngs[i].alt !== undefined ? this._latlngs[i].alt :
-                    this._latlngs[i][2] !== undefined ? +this._latlngs[i][2] : 1;
-                k = alt * v;
-
-                grid[y] = grid[y] || [];
-                cell = grid[y][x];
-
-                if (!cell) {
-                    grid[y][x] = [p.x, p.y, k];
-
-                } else {
-                    cell[0] = (cell[0] * cell[2] + p.x * k) / (cell[2] + k); // x
-                    cell[1] = (cell[1] * cell[2] + p.y * k) / (cell[2] + k); // y
-                    cell[2] += k; // cumulated intensity value
-                }
-            }
-        }
-
-        for (i = 0, len = grid.length; i < len; i++) {
-            if (grid[i]) {
-                for (j = 0, len2 = grid[i].length; j < len2; j++) {
-                    cell = grid[i][j];
-                    if (cell) {
-                        data.push([
-                            Math.round(cell[0]),
-                            Math.round(cell[1]),
-                            Math.min(cell[2], max)
-                        ]);
-                    }
-                }
-            }
-        }
-        // console.timeEnd('process');
-
-        // console.time('draw ' + data.length);
-        this._heat.data(data).draw(this.options.minOpacity);
-        // console.timeEnd('draw ' + data.length);
-
-        this._frame = null;
-    },
-
-    _animateZoom: function (e) {
-        var scale = this._map.getZoomScale(e.zoom),
-            offset = this._map._getCenterOffset(e.center)._multiplyBy(-scale).subtract(this._map._getMapPanePos());
-
-        if (L.DomUtil.setTransform) {
-            L.DomUtil.setTransform(this._canvas, offset, scale);
-
+        if (entry.radius) {
+          radius = entry.radius * radiusMultiplier;
         } else {
-            this._canvas.style[L.DomUtil.TRANSFORM] = L.DomUtil.getTranslateString(offset) + ' scale(' + scale + ')';
+          radius = (this.cfg.radius || 2) * radiusMultiplier;
         }
-    }
-});
+        latlngPoint.radius = radius;
+        latLngPoints.push(latlngPoint);
+      }
+      if (this.cfg.useLocalExtrema) {
+        generatedData.max = localMax;
+        generatedData.min = localMin;
+      }
 
-L.heatLayer = function (latlngs, options) {
-    return new L.HeatLayer(latlngs, options);
-};
+      generatedData.data = latLngPoints;
+
+      this._heatmap.setData(generatedData);
+    },
+    setData: function(data) {
+      this._max = data.max || this._max;
+      this._min = data.min || this._min;
+      var latField = this.cfg.latField || 'lat';
+      var lngField = this.cfg.lngField || 'lng';
+      var valueField = this.cfg.valueField || 'value';
+    
+      // transform data to latlngs
+      var data = data.data;
+      var len = data.length;
+      var d = [];
+    
+      while (len--) {
+        var entry = data[len];
+        var latlng = new L.LatLng(entry[latField], entry[lngField]);
+        var dataObj = { latlng: latlng };
+        dataObj[valueField] = entry[valueField];
+        if (entry.radius) {
+          dataObj.radius = entry.radius;
+        }
+        d.push(dataObj);
+      }
+      this._data = d;
+    
+      this._draw();
+    },
+    // experimential... not ready.
+    addData: function(pointOrArray) {
+      if (pointOrArray.length > 0) {
+        var len = pointOrArray.length;
+        while(len--) {
+          this.addData(pointOrArray[len]);
+        }
+      } else {
+        var latField = this.cfg.latField || 'lat';
+        var lngField = this.cfg.lngField || 'lng';
+        var valueField = this.cfg.valueField || 'value';
+        var entry = pointOrArray;
+        var latlng = new L.LatLng(entry[latField], entry[lngField]);
+        var dataObj = { latlng: latlng };
+        
+        dataObj[valueField] = entry[valueField];
+        this._max = Math.max(this._max, dataObj[valueField]);
+        this._min = Math.min(this._min, dataObj[valueField]);
+
+        if (entry.radius) {
+          dataObj.radius = entry.radius;
+        }
+        this._data.push(dataObj);
+        this._draw();
+      }
+    },
+    _reset: function () {
+      this._origin = this._map.layerPointToLatLng(new L.Point(0, 0));
+      
+      var size = this._map.getSize();
+      if (this._width !== size.x || this._height !== size.y) {
+        this._width  = size.x;
+        this._height = size.y;
+
+        this._el.style.width = this._width + 'px';
+        this._el.style.height = this._height + 'px';
+
+        this._heatmap._renderer.setDimensions(this._width, this._height);
+      }
+      this._draw();
+    } 
+  });
+
+  HeatmapOverlay.CSS_TRANSFORM = (function() {
+    var div = document.createElement('div');
+    var props = [
+      'transform',
+      'WebkitTransform',
+      'MozTransform',
+      'OTransform',
+      'msTransform'
+    ];
+
+    for (var i = 0; i < props.length; i++) {
+      var prop = props[i];
+      if (div.style[prop] !== undefined) {
+        return prop;
+      }
+    }
+    return props[0];
+  })();
+
+  return HeatmapOverlay;
+});
