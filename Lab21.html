@@ -20,7 +20,7 @@
 	
  // <script src="Lab2.js"></script> 
 	
- <script src="secondEd.js"></script> 
+// <script src="secondEd.js"></script> 
 	
   <script>
 
@@ -33,7 +33,10 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	  	  
 // geojson = L.geoJson(IllioisGJSON).addTo(map);
 
-SecondEd = L.geoJson(secondEd).addTo(map);
+$.getJSON("https://gist.githubusercontent.com/raechelportelli/91c6caf9af3daf85a7a2fe1eec079a10/raw/28c42649557d8e286c54bc9ef97af4c17bafdd96/secondEd.geojson",
+ function(data) {
+ 
+geojsonLayer.addData(data);
 
 var heatData = [];
 geojsonLayer.eachLayer(function(layer) {
