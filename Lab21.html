@@ -31,31 +31,31 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	  	  
 SecondEd = L.geoJson(secondEd).addTo(map);
 	  
-var heatData = [];
-function onEachFeature(feature, layer) {
-    var coord = feature.geometry.coordinates;
-    heatData.push([coord[1], coord[0]]);
+// var heatData = [];
+// function onEachFeature(feature, layer) {
+//     var coord = feature.geometry.coordinates;
+//     heatData.push([coord[1], coord[0]]);
 
-};
+// };
 
-L.GeoJSON(SecondEd, {
-    onEachFeature: onEachFeature
-})
+// L.GeoJSON(SecondEd, {
+//     onEachFeature: onEachFeature
+// })
 
-var heatLayer = L.heatLayer(heatData, {
-				radius: 100,
-				blur: 10,
-				opacity: 1,
-				maxZoom: 17,
-				max: 4.0,
+// var heatLayer = L.heatLayer(heatData, {
+// 				radius: 100,
+// 				blur: 10,
+// 				opacity: 1,
+// 				maxZoom: 17,
+// 				max: 4.0,
 				
-				gradient: {
-					0.0: 'green',
-					0.5: 'yellow',
-					1.0: 'red'}
+// 				gradient: {
+// 					0.0: 'green',
+// 					0.5: 'yellow',
+// 					1.0: 'red'}
         
-			}).addTo(map);
-		});
+// 			}).addTo(map);
+// 		});
 	  
   </script>
 </body>
