@@ -32,10 +32,15 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 SecondEd = L.geoJson(secondEd).addTo(map);
 	  
 var heatData = [];
-	SecondEd.eachLayer(function(layer) {
-		var latlng = layer.getLatLng();
-		heatData.push([latlng.lat, latlng.lng]);
-	});
+function onEachFeature(layer) {
+    var latlng = layer.getLatLng();
+    heatData.push([latlng.lat, latlng.lng]);
+
+};
+
+L.GeoJSON(SecondEd, {
+    onEachFeature: onEachFeature
+})
 
 var heatLayer = L.heatLayer(heatData, {
 				radius: 100,
