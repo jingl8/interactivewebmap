@@ -31,7 +31,10 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	  	  
 var myStyle = {
     "opacity": 0,
-    "fillOpacity": 0.5 // value between 0-1 or 0% - 100%
+    "fillOpacity": 0.5,
+    "weight": 7,
+    "color": 'rgba(0,0,0,0)'
+	
 };
 	  
 SecondEd = L.geoJson(secondEd, {
