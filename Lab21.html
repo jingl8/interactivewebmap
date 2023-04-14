@@ -29,32 +29,16 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 	  	  
-#SecondEd = L.geoJson(secondEd).addTo(map);
+SecondEd = L.geoJson(secondEd).addTo(map);
 	  
-$.getJSON("https://gist.githubusercontent.com/raechelportelli/91c6caf9af3daf85a7a2fe1eec079a10/raw/28c42649557d8e286c54bc9ef97af4c17bafdd96/secondEd.geojson",
- function(data) { geojsonLayer.addData(data);
+// $.getJSON("https://gist.githubusercontent.com/raechelportelli/91c6caf9af3daf85a7a2fe1eec079a10/raw/28c42649557d8e286c54bc9ef97af4c17bafdd96/secondEd.geojson",
+//  function(data) { geojsonLayer.addData(data);
 	  
 var heatData = [];
-	geojsonLayer.eachLayer(function(layer) {
+	SecondEd.eachLayer(function(layer) {
 		var latlng = layer.getLatLng();
-		var value = layer.value;
-		heatData.push([latlng.lat, latlng.lng, value]);
+		heatData.push([latlng.lat, latlng.lng]);
 	});
-	  
-var heatLayer = L.heatLayer(heatData, {
-				radius: 100,
-				blur: 10,
-				opacity: 1,
-				maxZoom: 17,
-				max: 4.0,
-				
-				gradient: {
-					0.0: 'green',
-					0.5: 'yellow',
-					1.0: 'red'}
-        
-			}).addTo(map);
-		});
 	  
 // var heatData = [];
 // function onEachFeature(feature, layer) {
