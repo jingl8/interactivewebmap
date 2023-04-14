@@ -29,7 +29,18 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 	  	  
-SecondEd = L.geoJson(secondEd).addTo(map);
+function style(feature) {
+    return {
+        weight: 0.5, //line weight
+        opacity: 1, //line opacity
+        color: 'rgba(0,0,0,0)', //line color
+        fillOpacity: 0.7 //shape file
+    };
+}
+	  
+SecondEd = L.geoJson(secondEd, {
+			style, //refers to the style function above
+		}).addTo(map);
 	  
 // $.getJSON("https://gist.githubusercontent.com/raechelportelli/91c6caf9af3daf85a7a2fe1eec079a10/raw/28c42649557d8e286c54bc9ef97af4c17bafdd96/secondEd.geojson",
 //  function(data) { geojsonLayer.addData(data);
@@ -40,16 +51,6 @@ var heatData = [];
 		heatData.push([latlng.lat, latlng.lng]);
 	});
 	  
-// var heatData = [];
-// function onEachFeature(feature, layer) {
-//     var coord = feature.geometry.coordinates;
-//     heatData.push([coord[1], coord[0]]);
-
-// };
-
-// L.GeoJSON(SecondEd, {
-//     onEachFeature: onEachFeature
-// })
 console.log(heatData); 
 var heatLayer = L.heatLayer(heatData, {
 				radius: 100,
