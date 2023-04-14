@@ -32,9 +32,9 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 SecondEd = L.geoJson(secondEd).addTo(map);
 	  
 var heatData = [];
-function onEachFeature(layer) {
-    var latlng = layer.getLatLng();
-    heatData.push([latlng.lat, latlng.lng]);
+function onEachFeature(feature, layer) {
+    var coord = feature.geometry.coordinates;
+    heatData.push([coord[1], coord[0]]);
 
 };
 
