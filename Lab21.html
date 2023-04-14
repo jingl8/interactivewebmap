@@ -29,12 +29,10 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 	  	  
-// SecondEd = L.geoJson(secondEd).addTo(map);
- 
-geojsonLayer.addData(secondEd);
+SecondEd = L.geoJson(secondEd).addTo(map);
 	  
 var heatData = [];
-	geojsonLayer.eachLayer(function(layer) {
+	SecondEd.eachLayer(function(layer) {
 		var latlng = layer.getLatLng();
 		heatData.push([latlng.lat, latlng.lng]);
 	});
