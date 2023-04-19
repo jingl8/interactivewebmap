@@ -21,8 +21,8 @@
             height = svg.attr("height") - margin //200
 
         // Step 4 
-        var yScale = d3.scaleLinear().domain([0, 3]).range([height, 0]),
-            xScale = d3.scaleLinear().domain([0, 800000]).range([0, width]);
+        var xScale = d3.scaleLinear().domain([0, 3]).range([0, width]),
+            yScale = d3.scaleLinear().domain([0, 800000]).range([height, 0]);
             
         var g = svg.append("g")
             .attr("transform", "translate(" + 100 + "," + 100 + ")");
@@ -44,7 +44,7 @@
         .attr('text-anchor', 'middle')
         .style('font-family', 'Helvetica')
         .style('font-size', 12)
-        .text('Count of Accidents(Independant)');
+        .text('Severity (Independant)');
         
         // Y label
         svg.append('text')
@@ -52,7 +52,7 @@
         .attr('transform', 'translate(60,' + height + ')rotate(-90)')
         .style('font-family', 'Helvetica')
         .style('font-size', 12)
-        .text('Severity (Dependant)');
+        .text('Count of Accidents(Dependant)');
 
         // Step 6
         g.append("g")
@@ -73,9 +73,9 @@
             .data(data)
             .enter()
             .append("circle")
-            .attr("cx", d=> xScale(d.Accidents))
-            .attr("cy", d=> yScale(d.Severity))
-            .attr("r", 6)
+            .attr("cx", d=> xScale(d.Severity))
+            .attr("cy", d=> yScale(d.Accidents))
+            .attr("r", 5)
             .attr("transform", "translate(" + 100 + "," + 100 + ")")
             .style("fill", "#CC0000");
         });
