@@ -74,7 +74,7 @@
             .enter()
             .append("path")
             .attr("class", "point")
-            .attr("d", d3.svg.symbol().type("triangle-up"))
+            .attr("d", d3.symbol().type(d3.symbolTriangle))
             .attr("transform", "translate(" + 100 + "," + 100 + ")")
             .style("fill", "#FFA500");
         });
