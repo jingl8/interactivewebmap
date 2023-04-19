@@ -7,6 +7,12 @@
 .myCircle:hover {
   stroke: black;
 }
+.axis path,
+ 
+    .point {
+        fill: steelblue;
+        stroke: #000;
+    }
 </style>
 </head>
 <body>
@@ -75,8 +81,8 @@
             .append("path")
             .attr("class", "point")
             .attr("d", d3.symbol().type(d3.symbolTriangle))
-            .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; })
-            .style("fill", "#FFA500");
+            .attr("transform", "translate(" + 100 + "," + 100 + ")")
+            .style("fill", "#4682b4");
         });
 
   
