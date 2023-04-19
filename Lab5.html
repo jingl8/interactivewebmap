@@ -69,13 +69,11 @@
 
             // Step 7
             svg.append('g')
-            .selectAll("dot")
+            .selectAll("path")
             .data(data)
             .enter()
-            .append("circle")
-            .attr("cx", d=> xScale(d.Severity))
-            .attr("cy", d=> yScale(d.Accidents))
-            .attr("r", 4)
+            .append("path")
+            .attr("d", d3.symbol().type(d3.symbolTriangle))
             .attr("transform", "translate(" + 100 + "," + 100 + ")")
             .style("fill", "#CC0000");
         });
