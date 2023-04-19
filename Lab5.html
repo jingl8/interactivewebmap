@@ -21,8 +21,8 @@
             height = svg.attr("height") - margin //200
 
         // Step 4 
-        var yScale = d3.scaleLinear().domain([0, 3]).range([0, height]),
-            xScale = d3.scaleLinear().domain([0, 800000]).range([width, 0]);
+        var yScale = d3.scaleLinear().domain([0, 3]).range([height, 0]),
+            xScale = d3.scaleLinear().domain([0, 800000]).range([0, width]);
             
         var g = svg.append("g")
             .attr("transform", "translate(" + 100 + "," + 100 + ")");
@@ -44,7 +44,7 @@
         .attr('text-anchor', 'middle')
         .style('font-family', 'Helvetica')
         .style('font-size', 12)
-        .text('Count of Accidents(Dependant)');
+        .text('Count of Accidents(Independant)');
         
         // Y label
         svg.append('text')
@@ -52,7 +52,7 @@
         .attr('transform', 'translate(60,' + height + ')rotate(-90)')
         .style('font-family', 'Helvetica')
         .style('font-size', 12)
-        .text('Severity (Independant)');
+        .text('Severity (Dependant)');
 
         // Step 6
         g.append("g")
