@@ -73,8 +73,9 @@
             .data(data)
             .enter()
             .append("path")
+            .attr("class", "point")
             .attr("d", d3.symbol().type(d3.symbolTriangle))
-            .attr("transform", function(d) { return "translate(" + xScale(d.Severity) + "," + xScale(d.Accidents) + ")"; })
+            .attr("transform", function(d) { return "translate(" + xScale(d.Severity) + "," + yScale(d.Accidents) + ")"; })
             .style("fill", "#CC0000");
         });
 
