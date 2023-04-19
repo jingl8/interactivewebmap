@@ -69,13 +69,12 @@
 
             // Step 7
             svg.append('g')
-            .selectAll("dot")
+            .selectAll(".point")
             .data(data)
             .enter()
-            .append("circle")
-            .attr("cx", d=> xScale(d.Severity))
-            .attr("cy", d=> yScale(d.Accidents))
-            .attr("r", 5)
+            .append("path")
+            .attr("class", "point")
+            .attr("d", d3.svg.symbol().type("triangle-up"))
             .attr("transform", "translate(" + 100 + "," + 100 + ")")
             .style("fill", "#FFA500");
         });
