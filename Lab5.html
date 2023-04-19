@@ -24,8 +24,8 @@
         var xScale = d3.scaleLinear().domain([0, 3]).range([0, width]),
             yScale = d3.scaleLinear().domain([0, 800000]).range([height, 0]);
             
-        var g = svg.append("g");
-        //    .attr("transform", "translate(" + 100 + "," + 100 + ")");
+        var g = svg.append("g")
+            .attr("transform", "translate(" + 100 + "," + 100 + ")");
 
         // Step 5
         // Title
@@ -75,7 +75,7 @@
             .append("path")
             .attr("class", "point")
             .attr("d", d3.symbol().type(d3.symbolTriangle))
-            .attr("transform", function(d) { return "translate(" + xScale(d.Severity) + "," + yScale(d.Accidents) + ")"; })
+            .attr("transform", function(d) { return "translate(" + (xScale(d.Severity) + 100) + "," + (yScale(d.Accidents) + 100) + ")"; })
             .style("fill", "#CC0000");
         });
 
