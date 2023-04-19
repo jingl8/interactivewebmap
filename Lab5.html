@@ -64,8 +64,6 @@
     
        
         //Load data and create scatter plot 
-    # d3.symbol().type(d3.symbolTriangle
-    var square = d3.symbol().type(d3.symbolSquare).size(12);
          d3.csv("data.csv", function(data) {
             console.log(data);
 
@@ -76,7 +74,7 @@
             .enter()
             .append("path")
             .attr("class", "point")
-            .attr("d", square))
+            .attr("d", d3.symbol().type(d3.symbolTriangle))
             .attr("transform", function(d) { return "translate(" + xScale(d.Severity) + "," + yScale(d.Accidents) + ")"; })
             .style("fill", "#CC0000");
         });
