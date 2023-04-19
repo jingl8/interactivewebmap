@@ -74,7 +74,7 @@
             .enter()
             .append("path")
             .attr("d", d3.symbol().type(d3.symbolTriangle))
-            .attr("transform", function(d) { return "translate(" + xScale(d.Severity) + "," + yScale(d.Accidents) + ")"; })
+            .attr("transform", function(d) { return "translate(" + d.Severity + "," + d.Accidents + ")"; })
             .style("fill", "#CC0000");
         });
 
