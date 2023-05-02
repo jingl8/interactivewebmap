@@ -104,7 +104,9 @@ function entryPoint() {
 	
 	mapN.map = draw_baseMap(map, GEO_VARIABLES[0], TRACE1);
 	var e = document.getElementById(map).getElementsByClassName("traceSelect")[0];
+	console.log(e);
 	var trace = e.options[e.selectedIndex].value;
+	console.log(trace);
 	mapN.intervals = classification(CLASSIFICATION_METHOD, NUMBER_OF_CLASS, trace)
 	mapN.colors = COLOR_CLASS[COLOR_HUE + "_" + NUMBER_OF_CLASS]
 	draw_choroplethMap(mapN, trace);
