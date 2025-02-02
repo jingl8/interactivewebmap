@@ -1,1 +1,1 @@
-# jingl8.github.io
+# Interactive web map with Leaflet and GeoJson
